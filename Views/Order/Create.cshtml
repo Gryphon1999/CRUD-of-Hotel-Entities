@@ -1,0 +1,47 @@
+﻿@model HotelWebSystem.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-6">
+                <label asp-for="RoomNum" class="control-label">Room Number</label>
+                <input asp-for="RoomNum" class="form-control" />
+                <span asp-validation-for="RoomNum" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="Price" class="control-label">Price</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="Quantity" class="control-label">Quantity</label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+            @Html.LabelFor(model => model.OrderTypeId, "Order Type", htmlAttributes: new { @class = "control-label" })
+               @Html.DropDownListFor(model=>model.OrderTypeId,new SelectList(Model.ordertypes,"Value","Text"),htmlAttributes: new {@class="form-control"})
+            </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                 <a asp-action="Index" class="btn btn-danger">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,62 @@
+﻿@model HotelWebSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Booking</h4>
+<hr />
+<div class="container">
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" /> 
+            <div class="row">
+            <div class="form-group col-6">
+                <label asp-for="CheckIn" class="control-label fw-bold">Check In</label>
+                <input asp-for="CheckIn" class="form-control" />
+                <span asp-validation-for="CheckIn" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="CheckOut" class="control-label fw-bold">Check Out</label>
+                <input asp-for="CheckOut" class="form-control" />
+                <span asp-validation-for="CheckOut" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="RoomTypes" class="control-label fw-bold">Room Type</label>
+                <input asp-for="RoomTypes" class="form-control" />
+                <span asp-validation-for="RoomTypes" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="NoOfChilderns" class="control-label fw-bold">No. of Childrens</label>
+                <input asp-for="NoOfChilderns" class="form-control" />
+                <span asp-validation-for="NoOfChilderns" class="text-danger"></span>
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="NoOfAdults" class="control-label fw-bold">No. of Adults</label>
+                <input asp-for="NoOfAdults" class="form-control" />
+                <span asp-validation-for="NoOfAdults" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-6">
+                <label asp-for="NoOfNights" class="control-label fw-bold">No. of Nights</label>
+                <input asp-for="NoOfNights" class="form-control" />
+                <span asp-validation-for="NoOfNights" class="text-danger"></span>
+            </div>
+         </div><br />
+         <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />&nbsp;
+                    <a asp-action="Index" class="btn btn-danger">Back to List</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

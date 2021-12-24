@@ -1,0 +1,53 @@
+﻿@model IEnumerable<HotelWebSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table table-bordered table-sm">
+    <thead style="background-color:black; text-align:center; color:white; font-size:small;">
+        <tr>
+            <th>Check In </th>
+            <th>Check Out</th>
+            <th>Room Types</th>
+            <th>No.of Childrens</th>
+            <th>No. of Nights</th>
+            <th>No. of Adults</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="table-primary">
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckIn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckOut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomTypes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoOfChilderns)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoOfAdults)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoOfNights)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-success">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-warning">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

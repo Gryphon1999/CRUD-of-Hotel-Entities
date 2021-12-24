@@ -1,0 +1,45 @@
+﻿@model IEnumerable<HotelWebSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table table-bordered table-sm">
+    <thead style="background-color:black; text-align:center; color:white; font-size:small;">
+        <tr>
+            <th>#</th>
+            <th>Employee Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Salary</th>
+            <th>Post</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model!=null)
+        {
+            var qn = 1;
+            @foreach (var item in Model) {
+            <tr class="table-primary">
+                <td>@(qn++)</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.EmployeeAddress</td>
+                <td>@item.EmployeeNumber</td>
+                <td>@item.EmployeeSalary</td>
+                <td>@item.EmployeePost</td>
+                <td>
+                <a asp-action="Edit" asp-route-id="@item.EmployeeId" class="btn btn-outline-success">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmployeeId" class="btn btn-outline-warning">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmployeeId" class="btn btn-outline-danger">Delete</a>
+            </td>
+            </tr> 
+        }
+}
+    </tbody>
+</table>
