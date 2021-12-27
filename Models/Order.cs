@@ -13,5 +13,8 @@ namespace HotelWebSystem.Models
         [NotMapped]
         public IEnumerable<SelectListItem> ordertypes { get; set; }
 
+        [NotMapped] 
+        public string OrderTypeName { get; set; }
+
     }
 }

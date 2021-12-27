@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +19,21 @@ namespace HotelWebSystem.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            return View( _context.orders.ToList());
+            var list = from a in _context.orders
+                       join b in _context.orderTypes
+                       on a.OrderTypeId equals b.Id
+                       into Order
+                       from b in Order.DefaultIfEmpty()
+                       select new Order()
+                       {
+                           Id = a.Id,
+                           RoomNum = a.RoomNum,
+                           Price = a.Price,
+                           Quantity = a.Quantity,
+                           OrderTypeId = a.OrderTypeId,
+                           OrderTypeName = b==null?"":b.Name
+                       };
+            return View(list);
         }
 
         // GET: Order/Details/5
@@ -51,6 +62,7 @@ namespace HotelWebSystem.Controllers
                 ordertypes = GetAllOrderTypes(),
             };
             return View(model);
+            //return View();
         }
 
         // POST: Order/Create
@@ -58,7 +70,7 @@ namespace HotelWebSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomNum,Price,Quantity,OrderTypeId")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,RoomNum,Price,Quantity,OrderTypeName")] Order order)
         {
             if (ModelState.IsValid)
             {
@@ -70,18 +82,10 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: Order/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+            var order = _context.orders.Find(id);
+            order.ordertypes = GetAllOrderTypes();
             return View(order);
         }
 
@@ -90,7 +94,7 @@ namespace HotelWebSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomNum,Price,Quantity,OrderType")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomNum,Price,Quantity,OrderTypeId")] Order order)
         {
             if (id != order.Id)
             {
@@ -164,3 +168,4 @@ namespace HotelWebSystem.Controllers
         }
     }
 }
+        

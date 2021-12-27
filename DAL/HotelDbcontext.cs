@@ -1,11 +1,14 @@
 ﻿using HotelWebSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace HotelWebSystem.DAL
 {
 
     public class HotelDbcontext : DbContext
     {
+        internal IEnumerable ordertypes;
+
         public HotelDbcontext(DbContextOptions<HotelDbcontext> options) : base(options)
         {
         }
