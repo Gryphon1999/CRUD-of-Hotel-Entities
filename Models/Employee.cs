@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HotelWebSystem.Models
 {
@@ -8,7 +9,10 @@ namespace HotelWebSystem.Models
         public string EmployeeName { get; set; }
         public string EmployeeAddress { get; set; }
         public string EmployeeNumber { get; set; } 
-        public double EmployeeSalary { get; set; }
+        public decimal EmployeeSalary { get; set; }
         public string EmployeePost { get; set; }
+        public string ImgPath { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
     }
 }

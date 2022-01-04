@@ -4,6 +4,7 @@ using HotelWebSystem.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelWebSystem.Migrations
 {
     [DbContext(typeof(HotelDbcontext))]
-    partial class HotelDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20211228065532_AddReservation")]
+    partial class AddReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,10 +39,6 @@ namespace HotelWebSystem.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("assigns");
                 });
@@ -87,11 +85,8 @@ namespace HotelWebSystem.Migrations
                     b.Property<string>("EmployeePost")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("EmployeeSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ImgPath")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("EmployeeSalary")
+                        .HasColumnType("float");
 
                     b.HasKey("EmployeeId");
 
@@ -145,8 +140,6 @@ namespace HotelWebSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderTypeId");
-
                     b.ToTable("orders");
                 });
 
@@ -195,36 +188,6 @@ namespace HotelWebSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("reservations");
-                });
-
-            modelBuilder.Entity("HotelWebSystem.Models.Assign", b =>
-                {
-                    b.HasOne("HotelWebSystem.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelWebSystem.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("HotelWebSystem.Models.Order", b =>
-                {
-                    b.HasOne("HotelWebSystem.Models.OrderType", "OrderType")
-                        .WithMany()
-                        .HasForeignKey("OrderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrderType");
                 });
 #pragma warning restore 612, 618
         }

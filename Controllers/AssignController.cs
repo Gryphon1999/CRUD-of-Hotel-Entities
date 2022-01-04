@@ -10,22 +10,23 @@ using HotelWebSystem.Models;
 
 namespace HotelWebSystem.Controllers
 {
-    public class BookingController : Controller
+    public class AssignController : Controller
     {
         private readonly HotelDbcontext _context;
 
-        public BookingController(HotelDbcontext context)
+        public AssignController(HotelDbcontext context)
         {
             _context = context;
         }
 
-        // GET: Booking
+        // GET: Assign
         public async Task<IActionResult> Index()
         {
-            return View(await _context.bookings.ToListAsync());
+            var hotelDbcontext = _context.assigns.Include(a => a.Customer).Include(a => a.Employee);
+            return View(await hotelDbcontext.ToListAsync());
         }
 
-        // GET: Booking/Details/5
+        // GET: Assign/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,43 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.bookings
+            var assign = await _context.assigns
+                .Include(a => a.Customer)
+                .Include(a => a.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
+            if (assign == null)
             {
                 return NotFound();
             }
 
-            return View(booking);
+            return View(assign);
         }
 
-        // GET: Booking/Create
+        // GET: Assign/Create
         public IActionResult Create()
         {
+            ViewData["CustomerId"] = new SelectList(_context.customers, "Id", "Name");
+            ViewData["EmployeeId"] = new SelectList(_context.employees, "EmployeeId", "EmployeeName");
             return View();
         }
 
-        // POST: Booking/Create
+        // POST: Assign/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CheckIn,CheckOut,RoomTypes,NoOfChilderns,NoOfAdults,NoOfNights")] Booking booking)
+        public async Task<IActionResult> Create([Bind("Id,CustomerId,EmployeeId")] Assign assign)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(booking);
+                _context.Add(assign);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(booking);
+            return View(assign);
         }
 
-        // GET: Booking/Edit/5
+        // GET: Assign/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +78,24 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.bookings.FindAsync(id);
-            if (booking == null)
+            var assign = await _context.assigns.FindAsync(id);
+            if (assign == null)
             {
                 return NotFound();
             }
-            return View(booking);
+            ViewData["CustomerId"] = new SelectList(_context.customers, "Id", "Name", assign.CustomerId);
+            ViewData["EmployeeId"] = new SelectList(_context.employees, "EmployeeId", "EmployeeName", assign.EmployeeId);
+            return View(assign);
         }
 
-        // POST: Booking/Edit/5
+        // POST: Assign/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CheckIn,CheckOut,RoomTypes,NoOfChilderns,NoOfAdults,NoOfNights")] Booking booking)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,EmployeeId")] Assign assign)
         {
-            if (id != booking.Id)
+            if (id != assign.Id)
             {
                 return NotFound();
             }
@@ -97,12 +104,12 @@ namespace HotelWebSystem.Controllers
             {
                 try
                 {
-                    _context.Update(booking);
+                    _context.Update(assign);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookingExists(booking.Id))
+                    if (!AssignExists(assign.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +120,10 @@ namespace HotelWebSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(booking);
+            return View(assign);
         }
 
-        // GET: Booking/Delete/5
+        // GET: Assign/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +131,32 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.bookings
+            var assign = await _context.assigns
+                .Include(a => a.Customer)
+                .Include(a => a.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
+            if (assign == null)
             {
                 return NotFound();
             }
 
-            return View(booking);
+            return View(assign);
         }
 
-        // POST: Booking/Delete/5
+        // POST: Assign/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var booking = await _context.bookings.FindAsync(id);
-            _context.bookings.Remove(booking);
+            var assign = await _context.assigns.FindAsync(id);
+            _context.assigns.Remove(assign);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookingExists(int id)
+        private bool AssignExists(int id)
         {
-            return _context.bookings.Any(e => e.Id == id);
+            return _context.assigns.Any(e => e.Id == id);
         }
     }
 }

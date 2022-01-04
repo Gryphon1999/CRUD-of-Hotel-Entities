@@ -4,6 +4,7 @@ using HotelWebSystem.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelWebSystem.Migrations
 {
     [DbContext(typeof(HotelDbcontext))]
-    partial class HotelDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20211231053852_ImgPath")]
+    partial class ImgPath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,8 +89,8 @@ namespace HotelWebSystem.Migrations
                     b.Property<string>("EmployeePost")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("EmployeeSalary")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("EmployeeSalary")
+                        .HasColumnType("float");
 
                     b.Property<string>("ImgPath")
                         .HasColumnType("nvarchar(max)");

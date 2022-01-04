@@ -28,45 +28,24 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: OrderTypeController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            return View();
+            var model = db.orderTypes.Find(id);
+            return View(model);
         }
 
         // POST: OrderTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(OrderType model)
+        public ActionResult Create(int id, OrderType model)
         {
             try
             {
-                db.orderTypes.Add(model);
-                db.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: OrderTypeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var data = db.orderTypes.Find(id);
-            return View(data);
-        }
-
-        // POST: OrderTypeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, OrderType model)
-        {
-            try
-            {
-                var data = db.orderTypes.Find(id);
-                data.Name = model.Name;
-                db.orderTypes.Update(data);
+                if (model.Id==0)
+                {
+                    db.orderTypes.Add(model);
+                }
+                db.orderTypes.Update(model);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -79,16 +58,18 @@ namespace HotelWebSystem.Controllers
         // GET: OrderTypeController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var model = db.orderTypes.Find(id);
+            return View(model);
         }
 
         // POST: OrderTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(OrderType model)
         {
             try
             {
+                db.orderTypes.Remove(model);
                 return RedirectToAction(nameof(Index));
             }
             catch

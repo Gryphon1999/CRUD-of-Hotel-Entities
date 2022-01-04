@@ -27,47 +27,24 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: CustomerController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            return View();
+            var model = db.customers.Find(id);
+            return View(model);
         }
 
         // POST: CustomerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Customer model)
+        public ActionResult Create(int id, Customer model)
         {
             try
             {
-                db.customers.Add(model);
-                db.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var data = db.customers.Find(id);
-            return View(data);
-        }
-
-        // POST: CustomerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Customer model)
-        {
-            try
-            {
-                var data = db.customers.Find(id);
-                data.Name = model.Name;
-                data.Address = model.Address;
-                data.PhoneNumber = model.PhoneNumber;
-                db.customers.Update(data);
+                if(model.Id == 0)
+                {
+                    db.customers.Add(model);
+                }
+                db.customers.Update(model);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

@@ -1,6 +1,6 @@
 ﻿namespace HotelWebSystem.Models
 {
-    public class Booking
+    public class Reservation
     {
         public int Id { get; set; }
         public DateTime CheckIn { get; set; }

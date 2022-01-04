@@ -10,22 +10,22 @@ using HotelWebSystem.Models;
 
 namespace HotelWebSystem.Controllers
 {
-    public class EventController : Controller
+    public class ReservationController : Controller
     {
         private readonly HotelDbcontext _context;
 
-        public EventController(HotelDbcontext context)
+        public ReservationController(HotelDbcontext context)
         {
             _context = context;
         }
 
-        // GET: Event
+        // GET: Booking
         public async Task<IActionResult> Index()
         {
-            return View(await _context.events.ToListAsync());
+            return View(await _context.reservations.ToListAsync());
         }
 
-        // GET: Event/Details/5
+        // GET: Booking/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,44 +33,44 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var events = await _context.events
+            var booking = await _context.reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (events == null)
+            if (booking == null)
             {
                 return NotFound();
             }
 
-            return View(events);
+            return View(booking);
         }
 
-        // GET: Event/Create
+        // GET: Booking/Create
         public IActionResult Create(int id)
         {
-            var model = _context.events.Find(id);
+            var model = _context.reservations.Find(id);
             return View(model);
         }
 
-        // POST: Event/Create
+        // POST: Booking/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id,[Bind("Id,EventType,Price,Location,Time")] Events events)
+        public async Task<IActionResult> Create(int id,[Bind("Id,CheckIn,CheckOut,RoomTypes,NoOfChilderns,NoOfAdults,NoOfNights")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {
-                if (events.Id==0)
+                if (reservation.Id==0)
                 {
-                    _context.Add(events);
+                    _context.Add(reservation);
                 }
-                _context.Update(events);
+                _context.Update(reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(events);
+            return View(reservation);
         }
 
-        // GET: Event/Delete/5
+        // GET: Booking/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -78,30 +78,30 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var events = await _context.events
+            var reservation = await _context.reservations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (events == null)
+            if (reservation == null)
             {
                 return NotFound();
             }
 
-            return View(events);
+            return View(reservation);
         }
 
-        // POST: Event/Delete/5
+        // POST: Booking/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var events = await _context.events.FindAsync(id);
-            _context.events.Remove(events);
+            var reservation = await _context.reservations.FindAsync(id);
+            _context.reservations.Remove(reservation);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EventsExists(int id)
+        private bool BookingExists(int id)
         {
-            return _context.events.Any(e => e.Id == id);
+            return _context.reservations.Any(e => e.Id == id);
         }
     }
 }

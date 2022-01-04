@@ -19,20 +19,7 @@ namespace HotelWebSystem.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            var list = from a in _context.orders
-                       join b in _context.orderTypes
-                       on a.OrderTypeId equals b.Id
-                       into Order
-                       from b in Order.DefaultIfEmpty()
-                       select new Order()
-                       {
-                           Id = a.Id,
-                           RoomNum = a.RoomNum,
-                           Price = a.Price,
-                           Quantity = a.Quantity,
-                           OrderTypeId = a.OrderTypeId,
-                           OrderTypeName = b==null?"":b.Name
-                       };
+            var list = _context.orders.Include(x=>x.OrderType).ToList();
             return View(list);
         }
 
@@ -44,7 +31,7 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var order = await _context.orders
+            var order = await _context.orders.Include(s=>s.OrderType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -55,12 +42,10 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: Order/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            var model = new Order()
-            {
-                ordertypes = GetAllOrderTypes(),
-            };
+            ViewData["orderTypes"]=_context.orderTypes.ToList();
+            var model = _context.orders.Find(id);
             return View(model);
             //return View();
         }
@@ -70,55 +55,16 @@ namespace HotelWebSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomNum,Price,Quantity,OrderTypeName")] Order order)
+        public async Task<IActionResult> Create(int id,[Bind("Id,RoomNum,Price,Quantity,OrderTypeName")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                if (order.Id==0)
+                {
+                    _context.Add(order);
+                }
+                _context.Update(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(order);
-        }
-
-        // GET: Order/Edit/5
-        public IActionResult Edit(int id)
-        {
-            var order = _context.orders.Find(id);
-            order.ordertypes = GetAllOrderTypes();
-            return View(order);
-        }
-
-        // POST: Order/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomNum,Price,Quantity,OrderTypeId")] Order order)
-        {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(order);
@@ -132,7 +78,7 @@ namespace HotelWebSystem.Controllers
                 return NotFound();
             }
 
-            var order = await _context.orders
+            var order = await _context.orders.Include(s=>s.OrderType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -158,14 +104,6 @@ namespace HotelWebSystem.Controllers
             return _context.orders.Any(e => e.Id == id);
         }
 
-        public IEnumerable<SelectListItem>GetAllOrderTypes()
-        {
-            return _context.orderTypes.ToList().Select(wh => new SelectListItem()
-            {
-                Text=wh.Name,
-                Value = wh.Id.ToString(),
-            });
-        }
     }
 }
         
