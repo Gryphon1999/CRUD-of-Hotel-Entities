@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelWebSystem.Migrations
 {
     [DbContext(typeof(HotelDbcontext))]
-    [Migration("20211224051604_AddOrderTypeId")]
-    partial class AddOrderTypeId
+    [Migration("20220107070240_CustomerEmployee")]
+    partial class CustomerEmployee
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,37 +23,6 @@ namespace HotelWebSystem.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("HotelWebSystem.Models.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CheckIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CheckOut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NoOfAdults")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NoOfChilderns")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NoOfNights")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoomTypes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("bookings");
-                });
 
             modelBuilder.Entity("HotelWebSystem.Models.Customer", b =>
                 {
@@ -77,6 +46,21 @@ namespace HotelWebSystem.Migrations
                     b.ToTable("customers");
                 });
 
+            modelBuilder.Entity("HotelWebSystem.Models.CustomerEmployee", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("customerEmployees");
+                });
+
             modelBuilder.Entity("HotelWebSystem.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
@@ -97,8 +81,11 @@ namespace HotelWebSystem.Migrations
                     b.Property<string>("EmployeePost")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("EmployeeSalary")
-                        .HasColumnType("float");
+                    b.Property<decimal>("EmployeeSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImgPath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeId");
 
@@ -152,6 +139,8 @@ namespace HotelWebSystem.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderTypeId");
+
                     b.ToTable("orders");
                 });
 
@@ -169,6 +158,72 @@ namespace HotelWebSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("orderTypes");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CheckIn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CheckOut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NoOfAdults")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoOfChilderns")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NoOfNights")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomTypes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("reservations");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.CustomerEmployee", b =>
+                {
+                    b.HasOne("HotelWebSystem.Models.Customer", "Customer")
+                        .WithMany("CustomerEmployees")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelWebSystem.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.Order", b =>
+                {
+                    b.HasOne("HotelWebSystem.Models.OrderType", "OrderType")
+                        .WithMany()
+                        .HasForeignKey("OrderTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrderType");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.Customer", b =>
+                {
+                    b.Navigation("CustomerEmployees");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<HotelDbcontext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HotelDbcontext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
 // Add services to the container.

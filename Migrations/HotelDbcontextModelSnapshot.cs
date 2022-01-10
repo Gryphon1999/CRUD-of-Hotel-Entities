@@ -22,29 +22,6 @@ namespace HotelWebSystem.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("HotelWebSystem.Models.Assign", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("assigns");
-                });
-
             modelBuilder.Entity("HotelWebSystem.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -65,6 +42,21 @@ namespace HotelWebSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("customers");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.CustomerEmployee", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CustomerId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("customerEmployees");
                 });
 
             modelBuilder.Entity("HotelWebSystem.Models.Employee", b =>
@@ -197,10 +189,10 @@ namespace HotelWebSystem.Migrations
                     b.ToTable("reservations");
                 });
 
-            modelBuilder.Entity("HotelWebSystem.Models.Assign", b =>
+            modelBuilder.Entity("HotelWebSystem.Models.CustomerEmployee", b =>
                 {
                     b.HasOne("HotelWebSystem.Models.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("CustomerEmployees")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -225,6 +217,11 @@ namespace HotelWebSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("OrderType");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.Customer", b =>
+                {
+                    b.Navigation("CustomerEmployees");
                 });
 #pragma warning restore 612, 618
         }
