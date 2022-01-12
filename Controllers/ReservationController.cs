@@ -46,8 +46,16 @@ namespace HotelWebSystem.Controllers
         // GET: Booking/Create
         public IActionResult Create(int id)
         {
-            var model = _context.reservations.Find(id);
-            return View(model);
+            var reservation = new Reservation();
+            if (id == 0)
+            {
+                return View(reservation);
+            }
+            else
+            {
+                var model = _context.reservations.Find(id);
+                return View(model);
+            }
         }
 
         // POST: Booking/Create
@@ -55,15 +63,18 @@ namespace HotelWebSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id,[Bind("Id,CheckIn,CheckOut,RoomTypes,NoOfChilderns,NoOfAdults,NoOfNights")] Reservation reservation)
+        public async Task<IActionResult> Create(int id, Reservation reservation)
         {
             if (ModelState.IsValid)
             {
-                if (reservation.Id==0)
+                if (reservation.Id == 0)
                 {
                     _context.Add(reservation);
                 }
-                _context.Update(reservation);
+                else
+                {
+                    _context.Update(reservation);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

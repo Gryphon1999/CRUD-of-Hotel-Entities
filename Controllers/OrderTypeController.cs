@@ -10,11 +10,11 @@ namespace HotelWebSystem.Controllers
         private readonly HotelDbcontext db;
         public OrderTypeController(HotelDbcontext context)
         {
-            db=context;
+            db = context;
         }
 
         // GET: OrderTypeController
-        public ActionResult Index()
+        public ActionResult Index(string searchItems)
         {
             var data = db.orderTypes.ToList();
             return View(data);
@@ -30,8 +30,15 @@ namespace HotelWebSystem.Controllers
         // GET: OrderTypeController/Create
         public ActionResult Create(int id)
         {
-            var model = db.orderTypes.Find(id);
-            return View(model);
+            if (id == 0)
+            {
+                return View();
+            }
+            else
+            {
+                var model = db.orderTypes.Find(id);
+                return View(model);
+            }
         }
 
         // POST: OrderTypeController/Create
@@ -41,11 +48,14 @@ namespace HotelWebSystem.Controllers
         {
             try
             {
-                if (model.Id==0)
+                if (model.Id == 0)
                 {
                     db.orderTypes.Add(model);
                 }
-                db.orderTypes.Update(model);
+                else
+                {
+                    db.orderTypes.Update(model);
+                }
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -65,11 +75,13 @@ namespace HotelWebSystem.Controllers
         // POST: OrderTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(OrderType model)
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
+                var model = db.orderTypes.Find(id);
                 db.orderTypes.Remove(model);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

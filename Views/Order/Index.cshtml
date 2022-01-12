@@ -1,45 +1,36 @@
-﻿@model IEnumerable<HotelWebSystem.Models.Order>
-
-@{
-    ViewData["Title"] = "Index";
-}
-
+@model IEnumerable<Order>
 <h1>Index</h1>
+<hr />
+<div class="container">
+    <a asp-action="Create" asp-controller="Order" class="btn btn-primary">Create</a>
+    <br><br>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Room Number</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Order Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-primary">
+            <tr>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.RoomNum</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.OrderType.Name</td>
+                    <td>
+                        <a asp-route-id="@item.Id" asp-action="Edit" asp-controller="Order">Edit</a> ||
+                        <a asp-route-id="@item.Id" asp-action="Delete" asp-controller="Order">Delete</a>
+                    </td>
+                </tr>
+                }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
-<table class="table table-bordered table-sm">
-    <thead style="background-color:black; text-align:center; color:white; font-size:small;">
-        <tr>
-            <th>Room Number</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Order Types</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr class="table-primary">
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomNum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderType.Name)
-            </td>
-            <td>
-                <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-outline-success">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-warning">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+            </tr>
+        </tbody>
+    </table>
+</div>

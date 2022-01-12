@@ -9,6 +9,12 @@
 <p>
     <a asp-action="Save" class="btn btn-primary">Create New</a>
 </p>
+<div class="aa-search-box">
+    <form asp-action="Index" method="get">
+        <input type="text" name="searchItems" placeholder="Search">
+        <button type="submit" class="btn btn-success my-2 my-sm-0"><span>Search</span></button>
+    </form>
+</div>
 <table class="table table-bordered table-sm">
     <thead style="background-color:black; text-align:center; color:white; font-size:small;">
         <tr>

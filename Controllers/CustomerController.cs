@@ -14,12 +14,15 @@ namespace HotelWebSystem.Controllers
             db = context;
         }
         // GET: CustomerController
-        public ActionResult Index()
+        public ActionResult Index(string searchItems)
         {
-            var data = db.customers.Include(c => c.CustomerEmployees).ThenInclude(c => c.Employee).OrderByDescending(p => p.Id);
+            var data = db.customers
+            .Include(c => c.CustomerEmployees)
+            .ThenInclude(c => c.Employee)
+            .OrderByDescending(p => p.Id);
             return View(data);
         }
-
+        
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {

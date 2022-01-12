@@ -2,11 +2,12 @@
 @{
     var order = ViewData["orderType"] as IEnumerable<OrderType>;
 }
-<h1>Create</h1>
+<h1>Edit</h1>
 <hr>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="RoomNum" class="form-label">Room Number</label>
                 <input asp-for="RoomNum" class="form-control" />
@@ -20,12 +21,11 @@
                 <input asp-for="Quantity" class="form-control" />
             </div>
             <div class="mb-4">
-                <label name="OrderTypeId" class="form-label">Order Type</label>
-                <select name="OrderTypeId" asp-items="@(new SelectList(order,"Id","Name"))"
-                    class="form-control"></select>
+                <label asp-for="OrderTypeId" class="form-label">Order Type</label>
+                <select asp-for="OrderTypeId" class="form-control" asp-items="@(new SelectList(order,"Id","Name"))"></select>
             </div>
-            
-            <button type="submit" class="btn btn-primary">Create</button>
+
+            <button type="submit" class="btn btn-primary">Edit</button>
         </form>
     </div>
 </div>

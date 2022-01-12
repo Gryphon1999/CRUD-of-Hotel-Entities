@@ -20,9 +20,9 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: Event
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchItems)
         {
-            return View(await _context.events.ToListAsync());
+            return View(await _context.events.Where(x=>x.EventType.Contains(searchItems)||searchItems==null).ToListAsync());
         }
 
         // GET: Event/Details/5
@@ -46,8 +46,16 @@ namespace HotelWebSystem.Controllers
         // GET: Event/Create
         public IActionResult Create(int id)
         {
-            var model = _context.events.Find(id);
-            return View(model);
+            var events = new Events();
+            if (id == 0)
+            {
+                return View(events);
+            }
+            else
+            {
+                var model = _context.events.Find(id);
+                return View(model);
+            }
         }
 
         // POST: Event/Create
@@ -55,15 +63,18 @@ namespace HotelWebSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id,[Bind("Id,EventType,Price,Location,Time")] Events events)
+        public async Task<IActionResult> Create(int id, [Bind("Id,EventType,Price,Location,Time")] Events events)
         {
             if (ModelState.IsValid)
             {
-                if (events.Id==0)
+                if (events.Id == 0)
                 {
                     _context.Add(events);
                 }
+                else{
+
                 _context.Update(events);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -1,109 +1,69 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using HotelWebSystem.DAL;
 using HotelWebSystem.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace HotelWebSystem.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly HotelDbcontext _context;
+        private readonly HotelDbcontext context;
 
-        public OrderController(HotelDbcontext context)
+        public OrderController(HotelDbcontext _context)
         {
-            _context = context;
+            context = _context;
         }
 
-        // GET: Order
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var list = _context.orders.Include(x=>x.OrderType).ToList();
-            return View(list);
+            var data = context.orders.Include(x => x.OrderType).ToList();
+            return View(data);
         }
-
-        // GET: Order/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Create()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.orders.Include(s=>s.OrderType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
+            ViewData["orderType"] = context.orderTypes.ToList();
+            return View();
         }
-
-        // GET: Order/Create
-        public IActionResult Create(int id)
-        {
-            ViewData["orderTypes"]=_context.orderTypes.ToList();
-            var model = _context.orders.Find(id);
-            return View(model);
-            //return View();
-        }
-
-        // POST: Order/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id,[Bind("Id,RoomNum,Price,Quantity,OrderTypeName")] Order order)
+        public IActionResult Create(Order order)
         {
-            if (ModelState.IsValid)
-            {
-                if (order.Id==0)
-                {
-                    _context.Add(order);
-                }
-                _context.Update(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(order);
+            context.orders.Add(order);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
-
-        // GET: Order/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.orders.Include(s=>s.OrderType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
+            var model = context.orders.Include(s => s.OrderType).FirstOrDefault(x => x.Id == id);
+            ViewData["orderType"] = context.orderTypes.ToList();
+            return View(model);
         }
-
-        // POST: Order/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public IActionResult Edit(Order order)
         {
-            var order = await _context.orders.FindAsync(id);
-            _context.orders.Remove(order);
-            await _context.SaveChangesAsync();
+            context.orders.Update(order);
+            context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Delete(int id)
+        {
+            var model = context.orders.Find(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var order = context.orders.Find(id);
+            context.orders.Remove(order);
+            context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(int id)
-        {
-            return _context.orders.Any(e => e.Id == id);
-        }
 
     }
 }
-        
