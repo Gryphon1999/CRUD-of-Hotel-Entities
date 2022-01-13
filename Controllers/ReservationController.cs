@@ -20,9 +20,10 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: Booking
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.reservations.ToListAsync());
+            var data = _context.reservations.Include(x=>x.RoomType).ToList();
+            return View(data);
         }
 
         // GET: Booking/Details/5
@@ -49,10 +50,12 @@ namespace HotelWebSystem.Controllers
             var reservation = new Reservation();
             if (id == 0)
             {
+                ViewData["roomType"] = _context.roomTypes.ToList();
                 return View(reservation);
             }
             else
             {
+                ViewData["roomType"] = _context.roomTypes.ToList();
                 var model = _context.reservations.Find(id);
                 return View(model);
             }

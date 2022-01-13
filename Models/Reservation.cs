@@ -5,7 +5,8 @@
         public int Id { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
-        public string RoomTypes { get; set; }
+        public int RoomTypeId { get; set; }
+        public RoomType RoomType { get; set; }
         public int NoOfChilderns { get; set; }
         public int NoOfAdults { get; set; }
         public int NoOfNights { get; set; }

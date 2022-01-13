@@ -4,15 +4,28 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Save</h1>
 
-<h4>OrderType</h4>
+<h4>Room Type</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label">Room Image</label>
+                @if (Model.Id == 0)
+                {
+                    <input asp-for="ImageFile" class="form-control" type="file" />
+                }
+                else
+                {
+                    <input asp-for="ImageFile" class="form-control" type="file" />
+                    <img src="~/@Model.ImgPath" height="50" width="50" />
+                }
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -20,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -31,16 +44,12 @@
                 }
                 else
                 {
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Edit" class="btn btn-primary" />
                     <a asp-action="Index" class="btn btn-danger">Back to List</a>
                 }
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

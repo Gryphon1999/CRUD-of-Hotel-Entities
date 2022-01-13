@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelWebSystem.Migrations
 {
     [DbContext(typeof(HotelDbcontext))]
-    [Migration("20220107070240_CustomerEmployee")]
-    partial class CustomerEmployee
+    [Migration("20220113092513_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -183,12 +183,36 @@ namespace HotelWebSystem.Migrations
                     b.Property<int>("NoOfNights")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoomTypes")
+                    b.Property<int>("RoomTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomTypeId");
+
+                    b.ToTable("reservations");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.RoomType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("reservations");
+                    b.ToTable("roomTypes");
                 });
 
             modelBuilder.Entity("HotelWebSystem.Models.CustomerEmployee", b =>
@@ -219,6 +243,17 @@ namespace HotelWebSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("OrderType");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.Reservation", b =>
+                {
+                    b.HasOne("HotelWebSystem.Models.RoomType", "RoomType")
+                        .WithMany()
+                        .HasForeignKey("RoomTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoomType");
                 });
 
             modelBuilder.Entity("HotelWebSystem.Models.Customer", b =>

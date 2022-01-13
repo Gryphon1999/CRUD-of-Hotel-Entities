@@ -13,10 +13,12 @@ namespace HotelWebSystem.Controllers
     public class RoomTypeController : Controller
     {
         private readonly HotelDbcontext context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RoomTypeController(HotelDbcontext _context)
+        public RoomTypeController(HotelDbcontext _context, IWebHostEnvironment webHostEnvironment)
         {
             context = _context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -38,15 +40,39 @@ namespace HotelWebSystem.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Create(RoomType roomType)
+        public IActionResult Create(int id, RoomType roomType)
         {
             if (roomType.Id == 0)
             {
+                var folder = "roomImg/";
+                folder += Guid.NewGuid().ToString() + roomType.ImageFile.FileName;
+                roomType.ImgPath = folder;
+                var serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+                using (var fileStream = new FileStream(serverFolder, FileMode.Create))
+                {
+                    roomType.ImageFile.CopyTo(fileStream);
+                }
                 context.roomTypes.Add(roomType);
             }
             else
             {
-                context.roomTypes.Update(roomType);
+                var model = context.roomTypes.Find(id);
+                var OldImgPath = Path.Combine(_webHostEnvironment.WebRootPath, model.ImgPath);
+                if (System.IO.File.Exists(OldImgPath))
+                {
+                    System.IO.File.Delete(OldImgPath);
+                }
+                var folder = "roomImg/";
+                folder += Guid.NewGuid().ToString() + roomType.ImageFile.FileName;
+                roomType.ImgPath = folder;
+                var serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+                using (var fileStream = new FileStream(serverFolder, FileMode.Create))
+                {
+                    roomType.ImageFile.CopyTo(fileStream);
+                }
+                model.Name = roomType.Name;
+                model.ImgPath = roomType.ImgPath;
+                context.roomTypes.Update(model);
             }
             context.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -60,6 +86,11 @@ namespace HotelWebSystem.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             var data = context.roomTypes.Find(id);
+            var OldImgPath = Path.Combine(_webHostEnvironment.WebRootPath, data.ImgPath);
+            if (System.IO.File.Exists(OldImgPath))
+            {
+                System.IO.File.Delete(OldImgPath);
+            }
             context.roomTypes.Remove(data);
             context.SaveChanges();
             return RedirectToAction(nameof(Index));

@@ -72,25 +72,22 @@ namespace HotelWebSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "reservations",
+                name: "roomTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RoomTypes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NoOfChilderns = table.Column<int>(type: "int", nullable: false),
-                    NoOfAdults = table.Column<int>(type: "int", nullable: false),
-                    NoOfNights = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImgPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_reservations", x => x.Id);
+                    table.PrimaryKey("PK_roomTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerEmployee",
+                name: "customerEmployees",
                 columns: table => new
                 {
                     CustomerId = table.Column<int>(type: "int", nullable: false),
@@ -98,15 +95,15 @@ namespace HotelWebSystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerEmployee", x => new { x.CustomerId, x.EmployeeId });
+                    table.PrimaryKey("PK_customerEmployees", x => new { x.CustomerId, x.EmployeeId });
                     table.ForeignKey(
-                        name: "FK_CustomerEmployee_customers_CustomerId",
+                        name: "FK_customerEmployees_customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerEmployee_employees_EmployeeId",
+                        name: "FK_customerEmployees_employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "employees",
                         principalColumn: "EmployeeId",
@@ -135,21 +132,50 @@ namespace HotelWebSystem.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RoomTypeId = table.Column<int>(type: "int", nullable: false),
+                    NoOfChilderns = table.Column<int>(type: "int", nullable: false),
+                    NoOfAdults = table.Column<int>(type: "int", nullable: false),
+                    NoOfNights = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_reservations_roomTypes_RoomTypeId",
+                        column: x => x.RoomTypeId,
+                        principalTable: "roomTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerEmployee_EmployeeId",
-                table: "CustomerEmployee",
+                name: "IX_customerEmployees_EmployeeId",
+                table: "customerEmployees",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_OrderTypeId",
                 table: "orders",
                 column: "OrderTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_reservations_RoomTypeId",
+                table: "reservations",
+                column: "RoomTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CustomerEmployee");
+                name: "customerEmployees");
 
             migrationBuilder.DropTable(
                 name: "events");
@@ -168,6 +194,9 @@ namespace HotelWebSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "orderTypes");
+
+            migrationBuilder.DropTable(
+                name: "roomTypes");
         }
     }
 }
