@@ -1,0 +1,33 @@
+@model EventBooking
+@{
+    ViewData["Title"] = "Create";
+    var select = ViewData["event"] as IEnumerable<Event>;
+}
+
+<h1>Event Booking Form</h1>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="Name" class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="form-label">Address</label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Number" class="form-label">Number</label>
+                <input asp-for="Number" class="form-control" />
+            </div>
+            <div class="mb-4">
+                <label name="EventId" class="form-label">Event</label>
+                <select name="EventId" asp-items="@(new SelectList(select,"Id","Name"))"
+                    class="form-control"></select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Book</button>
+        </form>
+    </div>
+</div>

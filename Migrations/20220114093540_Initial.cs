@@ -48,7 +48,7 @@ namespace HotelWebSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -111,6 +111,28 @@ namespace HotelWebSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "eventBookings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EventId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_eventBookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_eventBookings_events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "orders",
                 columns: table => new
                 {
@@ -162,6 +184,11 @@ namespace HotelWebSystem.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_eventBookings_EventId",
+                table: "eventBookings",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_orders_OrderTypeId",
                 table: "orders",
                 column: "OrderTypeId");
@@ -178,7 +205,7 @@ namespace HotelWebSystem.Migrations
                 name: "customerEmployees");
 
             migrationBuilder.DropTable(
-                name: "events");
+                name: "eventBookings");
 
             migrationBuilder.DropTable(
                 name: "orders");
@@ -191,6 +218,9 @@ namespace HotelWebSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "employees");
+
+            migrationBuilder.DropTable(
+                name: "events");
 
             migrationBuilder.DropTable(
                 name: "orderTypes");

@@ -14,13 +14,14 @@ namespace HotelWebSystem.Controllers
             db = context;
         }
         // GET: CustomerController
-        public ActionResult Index(string searchItems)
+        public async Task<IActionResult> Index(string searchItems,int pageNumber=1)
         {
+
             var data = db.customers
             .Include(c => c.CustomerEmployees)
             .ThenInclude(c => c.Employee)
             .OrderByDescending(p => p.Id);
-            return View(data);
+            return View(await PaginatedList<Customer>.CreateAsync(data,pageNumber,5));
         }
         
         // GET: CustomerController/Details/5

@@ -19,6 +19,7 @@
                 @item.Description <br>
                 </p>
                 <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-success">Edit</a> 
+                <a asp-action="Create" asp-controller="Reservation" class="btn btn-success">Book Room</a> 
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                 <br><br>
             </div>

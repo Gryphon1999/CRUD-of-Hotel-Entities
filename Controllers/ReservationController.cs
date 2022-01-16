@@ -20,12 +20,20 @@ namespace HotelWebSystem.Controllers
         }
 
         // GET: Booking
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            var data = _context.reservations.Include(x=>x.RoomType).ToList();
+            List<Reservation> reservations =await _context.reservations.Include(x => x.RoomType).ToListAsync();
+            const int pageSize =2;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount=reservations.Count();
+            var pager=new Pager(recsCount,pg,pageSize);
+            int recSkip=(pg-1)*pageSize;
+            var data=reservations.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.Pager=pager;
             return View(data);
         }
-
         // GET: Booking/Details/5
         public async Task<IActionResult> Details(int? id)
         {

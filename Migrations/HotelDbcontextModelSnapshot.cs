@@ -90,7 +90,7 @@ namespace HotelWebSystem.Migrations
                     b.ToTable("employees");
                 });
 
-            modelBuilder.Entity("HotelWebSystem.Models.Events", b =>
+            modelBuilder.Entity("HotelWebSystem.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,10 +98,10 @@ namespace HotelWebSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("EventType")
+                    b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Price")
@@ -113,6 +113,33 @@ namespace HotelWebSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("events");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.EventBooking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("eventBookings");
                 });
 
             modelBuilder.Entity("HotelWebSystem.Models.Order", b =>
@@ -230,6 +257,17 @@ namespace HotelWebSystem.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("HotelWebSystem.Models.EventBooking", b =>
+                {
+                    b.HasOne("HotelWebSystem.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("HotelWebSystem.Models.Order", b =>
