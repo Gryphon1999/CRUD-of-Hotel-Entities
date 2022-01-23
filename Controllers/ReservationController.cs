@@ -23,7 +23,7 @@ namespace HotelWebSystem.Controllers
         public async Task<IActionResult> Index(int pg = 1)
         {
             List<Reservation> reservations =await _context.reservations.Include(x => x.RoomType).ToListAsync();
-            const int pageSize =2;
+            const int pageSize =4;
             if (pg < 1)
                 pg = 1;
 

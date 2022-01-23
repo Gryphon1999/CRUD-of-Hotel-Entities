@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/HotelWebSystem.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <style>
         a {
             text-decoration: none;
@@ -49,21 +50,23 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="EventBooking"
                                 asp-action="Index">Event Booking</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">Order</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="Index">View
-                                        Order</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="OrderType"
-                                        asp-action="Index">Types</a></li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category"
+                                asp-action="Index">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Menu"
+                                asp-action="Index">Menu</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Room</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-controller="RoomType" asp-action="Index">Types</a></li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Menu"
+                                asp-action="Index">My Order</a>
                         </li>
                     </ul>
                 </div>

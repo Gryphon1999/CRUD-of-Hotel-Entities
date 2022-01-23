@@ -6,64 +6,65 @@ using System.Threading.Tasks;
 using HotelWebSystem.DAL;
 using HotelWebSystem.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace HotelWebSystem.Controllers
 {
-    public class OrderController : Controller
+    public class CategoryController : Controller
     {
         private readonly HotelDbcontext context;
 
-        public OrderController(HotelDbcontext _context)
+        public CategoryController(HotelDbcontext _context)
         {
             context = _context;
         }
 
         public IActionResult Index()
         {
-            var data = context.orders.Include(x => x.OrderType).ToList();
+            var data = context.categories.ToList();
             return View(data);
         }
         public IActionResult Create()
         {
-            ViewData["orderType"] = context.orderTypes.ToList();
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Order order)
+        public IActionResult Create(Category category)
         {
-            context.orders.Add(order);
+            context.categories.Add(category);
             context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Edit(int id)
         {
-            var model = context.orders.Include(s => s.OrderType).FirstOrDefault(x => x.Id == id);
-            ViewData["orderType"] = context.orderTypes.ToList();
-            return View(model);
+            var data = context.categories.Find(id);
+            return View(data);
         }
         [HttpPost]
-        public IActionResult Edit(Order order)
+        public IActionResult Edit(Category category)
         {
-            context.orders.Update(order);
+            context.categories.Update(category);
             context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Delete(int id)
         {
-            var model = context.orders.Find(id);
-            return View(model);
+            var data = context.categories.Find(id);
+            return View(data);
         }
         [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
-            var order = context.orders.Find(id);
-            context.orders.Remove(order);
+            var data = context.categories.Find(id);
+            context.categories.Remove(data);
             context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
-
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View("Error!");
+        }
     }
 }
